@@ -4,12 +4,12 @@ addLayer("s", {
     position: 0, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
     startData() { return {
         unlocked: true,
-		points: new Decimal(0),
+		points: new Decimal(1),
     }},
     color: "#d97811",
-    requires: new Decimal(10), // Can be a function that takes requirement increases into account
-    resource: "prestige points", // Name of prestige currency
-    baseResource: "points", // Name of resource prestige is based on
+    requires: new Decimal(1), // Can be a function that takes requirement increases into account
+    resource: "土", // Name of prestige currency
+    baseResource: "沙子", // Name of resource prestige is based on
     baseAmount() {return player.points}, // Get the current amount of baseResource
     type: "normal", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
     exponent: 0.5, // Prestige currency exponent
@@ -24,5 +24,17 @@ addLayer("s", {
     hotkeys: [
         {key: "s", description: "土: 挖一块土", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
-    layerShown(){return true}
+    layerShown(){return true},
+    upgrades: {
+
+        11: {
+            title: "增加沙子上限",
+            description: "增加沙子上限至16",
+            cost: new Decimal(10),
+            unlocked() { return player[this.layer].unlocked }, // The upgrade is only visible when this is true
+            branches: [12],
+            onPurchase: ()=>{player.pointsLimit = new Decimal(16)},
+            tooltip: "hi",
+        }
+    },
 })

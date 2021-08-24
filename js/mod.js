@@ -2,12 +2,11 @@ let modInfo = {
 	name: "The Chicken Farm Tree",
 	id: "chickenfarmmod",
 	author: "jibro",
-	pointsName: "土",
+	pointsName: "沙子",
 	modFiles: ["layers.js", "tree.js"],
-
 	discordName: "",
 	discordLink: "",
-	initialStartPoints: new Decimal (10), // Used for hard resets and new players
+	initialStartPoints: new Decimal (1), // Used for hard resets and new players
 	offlineLimit: 1,  // In hours
 }
 
@@ -34,7 +33,7 @@ function getStartPoints(){
 
 // Determines if it should show points/sec
 function canGenPoints(){
-	return player.points.lt(10)
+	return player.points.lt(player.pointsLimit)
 }
 
 // Calculate points/sec!
@@ -48,6 +47,7 @@ function getPointGen() {
 
 // You can add non-layer related variables that should to into "player" and be saved here, along with default values
 function addedPlayerData() { return {
+	pointsLimit: new Decimal(1)
 }}
 
 // Display extra things at the top of the page
@@ -56,7 +56,8 @@ var displayThings = [
 
 // Determines when the game "ends"
 function isEndgame() {
-	return player.points.gte(new Decimal("e280000000"))
+	return false
+	// return player.points.gte(new Decimal("e280000000"))
 }
 
 

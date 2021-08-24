@@ -336,7 +336,10 @@ function gameLoop(diff) {
 			diff = limit
 	}
 	addTime(diff)
-	player.points = player.points.add(tmp.pointGen.times(diff)).max(0)
+	// 如果超过了上限则设置为上限
+	let calcPoints = player.points.add(tmp.pointGen.times(diff)).max(0)
+	let pointsLimit = player.pointsLimit;
+	player.points = calcPoints.lt(pointsLimit) ? calcPoints : pointsLimit
 
 	for (let x = 0; x <= maxRow; x++){
 		for (item in TREE_LAYERS[x]) {

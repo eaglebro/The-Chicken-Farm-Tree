@@ -2,7 +2,7 @@ let modInfo = {
 	name: "The Chicken Farm Tree",
 	id: "chickenfarmmod",
 	author: "jibro",
-	pointsName: "Soil",
+	pointsName: "土",
 	modFiles: ["layers.js", "tree.js"],
 
 	discordName: "",
@@ -34,7 +34,7 @@ function getStartPoints(){
 
 // Determines if it should show points/sec
 function canGenPoints(){
-	return true
+	return player.points.lt(10)
 }
 
 // Calculate points/sec!

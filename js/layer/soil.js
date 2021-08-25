@@ -1,3 +1,31 @@
+// 主要颜色
+const primaryColor = '#ff7f00'
+// 选中颜色
+const chosenColor = '#c97927'
+// 次要颜色
+const secondaryColor = '#f4ffff'
+// 不可选颜色
+const negativeColor = '#777777'
+
+/**
+ * get upgrade button style
+ * @returns {Object} some of the upgrade button style
+ */
+function upGradeStyle() {
+    let style
+    if (hasUpgrade(this.layer, this.id)) {
+        style = {background: chosenColor, color: secondaryColor}
+    } else if (canAffordUpgrade(this.layer, this.id)) {
+        // 需要加！important以替换样式
+        style = {color: secondaryColor + '!important'};
+    } else {
+        style = {background: negativeColor, color: secondaryColor};
+    }
+    style['border-radius'] = '3px'
+    style['margin'] = '5px'
+    return style
+}
+
 addLayer("s", {
     name: "soil", // This is optional, only used in a few places, If absent it just uses the layer id.
     symbol: "土", // This appears on the layer's node. Default is the id with the first letter capitalized
@@ -8,7 +36,7 @@ addLayer("s", {
             points: new Decimal(1),
         }
     },
-    color: "#d97811",
+    color: primaryColor,
     requires: new Decimal(1), // Can be a function that takes requirement increases into account
     resource: "土", // Name of prestige currency
     baseResource: "沙子", // Name of resource prestige is based on
@@ -51,6 +79,7 @@ addLayer("s", {
                     player.pointsLimit = new Decimal(16)
                 },
                 tooltip: "",
+                style: upGradeStyle
             },
         12:
             {
@@ -62,6 +91,7 @@ addLayer("s", {
                 },
                 effect: 1.2,
                 tooltip: "",
+                style: upGradeStyle
             }
     },
     buyables: {
@@ -83,5 +113,18 @@ addLayer("s", {
             effect(x) {return new Decimal(1).add(new Decimal(0.1).mul(x))},
             purchaseLimit: 10
         },
-    }
+    },
+    tabFormat: [
+        "main-display",
+        "prestige-button",
+        "blank",
+        "blank",
+        "blank",
+        "blank",
+        "upgrades",
+        "buyables"
+     ],
+    // componentStyles:{
+    //     "upgrades"() {return {background: '#f4ffff'}}
+    // }
 })

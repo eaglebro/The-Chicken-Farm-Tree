@@ -3,7 +3,7 @@ let modInfo = {
 	id: "chickenfarmmod",
 	author: "jibro",
 	pointsName: "沙子",
-	modFiles: ["layer/soil.js", "layer/earthworm.js", "tree.js"],
+	modFiles: ['layer/metadata.js', "layer/soil.js", "layer/earthworm.js", "tree.js"],
 	discordName: "",
 	discordLink: "",
 	initialStartPoints: new Decimal (1), // Used for hard resets and new players

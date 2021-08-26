@@ -165,6 +165,9 @@ addLayer("s", {
     },
     tabFormat: [
         "main-display",
+        ["display-text",
+            function() { return '总计获取了 ' + format(player[this.layer].pointsAcquisitionTotal) + ' 土' },
+            { "color": "red", "font-size": "32px", "font-family": "Comic Sans MS" }],
         "prestige-button",
         "resource-display",
         "blank",

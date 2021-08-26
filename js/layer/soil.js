@@ -62,7 +62,11 @@ addLayer("s", {
         return {
             unlocked: true,
             points: new Decimal(1),
+            pointsAcquisitionTotal: new Decimal(1)
         }
+    },
+    update(diff) {
+        this.pointsAcquisitionTotal = this.pointsAcquisitionTotal.add(tmp.pointGen.times(diff));
     },
     color: primaryColor,
     requires: new Decimal(1), // Can be a function that takes requirement increases into account
@@ -130,6 +134,7 @@ addLayer("s", {
                     return hasUpgrade('s', 12)
                 },
                 effect() {
+                    let points = player.s.points
                     let eff = 2
                     return eff;
                 },

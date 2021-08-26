@@ -104,7 +104,7 @@ addLayer("s", {
                     Cost: <span style="color: ${this.canAfford() ? 'yellowgreen' : 'red'}">${format(this.cost())}</span>土\n
                     ( <span style="color: yellowgreen">${getBuyableAmount(this.layer, this.id)}/10</span> )已购买
                 `;
-                },
+            },
             canAfford() { return player[this.layer].points.gte(this.cost()) },
             buy() {
                 player[this.layer].points = player[this.layer].points.sub(this.cost())
@@ -123,7 +123,7 @@ addLayer("s", {
         "blank",
         "upgrades",
         "buyables"
-     ],
+    ],
     // componentStyles:{
     //     "upgrades"() {return {background: '#f4ffff'}}
     // }

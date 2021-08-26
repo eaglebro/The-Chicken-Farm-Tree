@@ -7,22 +7,37 @@ const secondaryColor = '#f4ffff'
 // 不可选颜色
 const negativeColor = '#777777'
 
+activeButtonColorStyle = {color: secondaryColor + '!important'}
+chosenButtonColorStyle = {background: chosenColor, color: secondaryColor}
+lockedButtionColorStyle = {background: negativeColor, color: secondaryColor}
+
+/**
+ * add border style to a style object
+ *
+ * @param {Object} style target style object to add border style
+ * @return {Object} result style object
+ */
+function addBorderStyle(style) {
+    style['border-radius'] = '3px'
+    style['margin'] = '5px'
+    return style
+}
+
 /**
  * get upgrade button style
+ *
  * @returns {Object} some of the upgrade button style
  */
 function upGradeStyle() {
     let style
     if (hasUpgrade(this.layer, this.id)) {
-        style = {background: chosenColor, color: secondaryColor}
+        style = chosenButtonColorStyle
     } else if (canAffordUpgrade(this.layer, this.id)) {
-        // 需要加！important以替换样式
-        style = {color: secondaryColor + '!important'};
+        style = activeButtonColorStyle
     } else {
-        style = {background: negativeColor, color: secondaryColor};
+        style = lockedButtionColorStyle
     }
-    style['border-radius'] = '3px'
-    style['margin'] = '5px'
+    style = addBorderStyle(style)
     return style
 }
 

@@ -145,7 +145,10 @@ addLayer("s", {
                 },
                 effect() {
                     let total = player.s.pointsAcquisitionTotal
-                    return total.log10((total).max(10))
+                    if (!total) {
+                        player.s.pointsAcquisitionTotal = new Decimal(1);
+                    }
+                    return ((total).max(10).log10()).max(1);
                 },
                 style: upGradeStyle
             },

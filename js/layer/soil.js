@@ -145,7 +145,7 @@ addLayer("s", {
                 },
                 effect() {
                     let total = player.s.pointsAcquisitionTotal
-                    return total.log10(total+1)
+                    return total.log10((total).max(10))
                 },
                 style: upGradeStyle
             },

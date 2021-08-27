@@ -12,12 +12,17 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.0",
-	name: "Literally nothing",
+	num: "0.0.2",
+	name: "Hardly playable",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
-	<h3>v0.0.1</h3><br>
+	<h2>v0.0.2</h2><br>
+		- Added achievements panel.<br>
+		- Added a new achievement to unlock.<br>
+		- Added a new layer -- Craft, where you<br>
+		    can make new equipments and upgrades<br>
+	<h2>v0.0.1</h2><br>
 		- Added layer soil.<br>
 		- Added 3 clickable things.<br>
 		- Some style adjustment`

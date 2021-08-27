@@ -25,9 +25,15 @@ addLayer("a", {
                     return new Decimal(1.05);
                 },
                 onComplete() {
-                    player.a.points  = player.s.points.add(1)
+                    player.a.points  = player.a.points.add(1)
                 }
             },
+            12: {
+                name: '手工艺',
+                done(){
+                    return hasUpgrade('s',14)
+                }
+            }
         },
         midsection: ["grid", "blank"],
         // grid: {

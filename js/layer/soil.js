@@ -108,7 +108,7 @@ addLayer("s", {
         11:
             {
                 // title: `<h2>${hasUpgrade('c', 11)?'小盒子':'大盒子'}</h2>`,
-                title: `<h2>小盒子</h2>`,
+                title(){ return `<h2>${hasUpgrade('c', 11)?'大盒子': '小盒子'}</h2>`},
                 description: "增加沙子上限",
                 cost: new Decimal(10),
                 unlocked() {

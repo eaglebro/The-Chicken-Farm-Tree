@@ -119,8 +119,10 @@ addLayer("s", {
                 },
                 effect() {
                     let eff = new Decimal(1)
-                    if(hasUpgrade('s', 11)) eff = new Decimal(16)
-                    if(hasUpgrade('c', 11)) eff = new Decimal(3000)
+                    if(hasUpgrade('s', 11)) {
+                        eff = new Decimal(16)
+                        if(hasUpgrade('c', 11)) eff = new Decimal(3000)
+                    }
                     return eff
                 },
                 effectDisplay(){

@@ -7,22 +7,50 @@ const secondaryColor = '#f4ffff'
 // 不可选颜色
 const negativeColor = '#777777'
 
+activeButtonColorStyle = {color: secondaryColor + '!important'}
+chosenButtonColorStyle = {background: chosenColor, color: secondaryColor}
+lockedButtionColorStyle = {background: negativeColor, color: secondaryColor}
+
+/**
+ * add border style to a style object
+ *
+ * @param {Object} style target style object to add border style
+ * @return {Object} result style object
+ */
+function addBorderStyle(style) {
+    style['border-radius'] = '5px'
+    style['margin'] = '5px'
+    return style
+}
+
 /**
  * get upgrade button style
+ *
  * @returns {Object} some of the upgrade button style
  */
 function upGradeStyle() {
     let style
     if (hasUpgrade(this.layer, this.id)) {
-        style = {background: chosenColor, color: secondaryColor}
+        style = chosenButtonColorStyle
     } else if (canAffordUpgrade(this.layer, this.id)) {
-        // 需要加！important以替换样式
-        style = {color: secondaryColor + '!important'};
+        style = activeButtonColorStyle
     } else {
-        style = {background: negativeColor, color: secondaryColor};
+        style = lockedButtionColorStyle
     }
-    style['border-radius'] = '3px'
-    style['margin'] = '5px'
+    style = addBorderStyle(style)
+    return style
+}
+
+function buyableStyle() {
+    let style
+    if (getBuyableAmount(this.layer, this.id).eq(this.purchaseLimit)) {
+        style = chosenButtonColorStyle;
+    } else if (canBuyBuyable(this.layer, this.id)) {
+        style = activeButtonColorStyle;
+    } else {
+        style = lockedButtionColorStyle;
+    }
+    style = addBorderStyle(style)
     return style
 }
 
@@ -34,7 +62,11 @@ addLayer("s", {
         return {
             unlocked: true,
             points: new Decimal(1),
+            pointsAcquisitionTotal: new Decimal(1)
         }
+    },
+    update(diff) {
+        this.pointsAcquisitionTotal = this.pointsAcquisitionTotal.add(tmp.pointGen.times(diff));
     },
     color: primaryColor,
     requires: new Decimal(1), // Can be a function that takes requirement increases into account
@@ -68,7 +100,7 @@ addLayer("s", {
     upgrades: {
         11:
             {
-                title: "增加沙子上限",
+                title: "<h2>小盒子</h2>",
                 description: "增加沙子上限至16",
                 cost: new Decimal(10),
                 unlocked() {
@@ -83,7 +115,7 @@ addLayer("s", {
             },
         12:
             {
-                title: "增加沙子获取效率",
+                title: "<h2>挖的更快了</h2>",
                 description: "沙子获取效率x1.2",
                 cost: new Decimal(20),
                 unlocked() {
@@ -92,6 +124,21 @@ addLayer("s", {
                 effect: 1.2,
                 tooltip: "",
                 style: upGradeStyle
+            },
+        13:
+            {
+                title: "<h2>熟练掌握</h2>",
+                description: `总获取土的数目加成挖的速度\nx2`,
+                cost: new Decimal(45),
+                unlocked() {
+                    return hasUpgrade('s', 12)
+                },
+                effect() {
+                    let points = player.s.points
+                    let eff = 2
+                    return eff;
+                },
+                style: upGradeStyle
             }
     },
     buyables: {
@@ -99,31 +146,37 @@ addLayer("s", {
             cost(x) { return new Decimal(x).pow(x) },
             display() {
                 return `
-                    减少税率\n\n
-                    使沙子的价值<span style="color: yellowgreen">^${this.effect()}</span>\n
-                    Cost: <span style="color: ${this.canAfford() ? 'yellowgreen' : 'red'}">${format(this.cost())}</span>土\n
-                    ( <span style="color: yellowgreen">${getBuyableAmount(this.layer, this.id)}/10</span> )已购买
+                    <h2>减少税率</h2>\n\n
+                    使沙子的价值^${this.effect()}\n
+                    Cost: ${format(this.cost())}土\n
+                    ( ${getBuyableAmount(this.layer, this.id)}/ ${this.purchaseLimit} )已购买
                 `;
-                },
+            },
             canAfford() { return player[this.layer].points.gte(this.cost()) },
             buy() {
                 player[this.layer].points = player[this.layer].points.sub(this.cost())
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
-            effect(x) {return new Decimal(1).add(new Decimal(0.1).mul(x))},
-            purchaseLimit: 10
+            effect(x) {
+                return format(new Decimal(1).add(new Decimal(0.2).mul(x)));},
+            purchaseLimit: 5,
+            style: buyableStyle
         },
     },
     tabFormat: [
         "main-display",
+        ["display-text",
+            function() { return '总计获取了 ' + format(player[this.layer].pointsAcquisitionTotal) + ' 土' },
+            { "color": "red", "font-size": "32px", "font-family": "Comic Sans MS" }],
         "prestige-button",
+        "resource-display",
         "blank",
         "blank",
         "blank",
         "blank",
         "upgrades",
         "buyables"
-     ],
+    ],
     // componentStyles:{
     //     "upgrades"() {return {background: '#f4ffff'}}
     // }

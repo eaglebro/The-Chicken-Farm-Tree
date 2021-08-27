@@ -3,7 +3,7 @@ let modInfo = {
 	id: "chickenfarmmod",
 	author: "jibro",
 	pointsName: "沙子",
-	modFiles: ['layer/metadata.js', "layer/soil.js", "layer/earthworm.js", "tree.js"],
+	modFiles: ['layer/achievements.js', "layer/soil.js", "layer/craft.js", "layer/earthworm.js", "tree.js"],
 	discordName: "",
 	discordLink: "",
 	initialStartPoints: new Decimal (1), // Used for hard resets and new players
@@ -44,6 +44,8 @@ function getPointGen() {
 
 	let gain = new Decimal(1)
 	if (hasUpgrade('s', 12)) gain = gain.times(upgradeEffect('s', 12));
+	if (hasUpgrade('s', 13)) gain = gain.times(upgradeEffect('s', 13));
+	if (hasAchievement('a', 11)) gain = gain.times(achievementEffect('a', 11));
 	return gain
 }
 

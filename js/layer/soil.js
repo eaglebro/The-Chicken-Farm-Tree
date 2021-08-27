@@ -66,7 +66,9 @@ addLayer("s", {
         }
     },
     update(diff) {
-        this.pointsAcquisitionTotal = this.pointsAcquisitionTotal.add(tmp.pointGen.times(diff));
+        // 计算获取的沙子总量。总量每次增加这一帧获得的沙子数量。如果下一帧到达上限则使用到达上限的所需值
+        player[this.layer].pointsAcquisitionTotal = player[this.layer].pointsAcquisitionTotal.add(tmp.pointGen.times(diff))
+        // this.pointsAcquisitionTotal = this.pointsAcquisitionTotal.add(tmp.pointGen.times(diff));
     },
     color: primaryColor,
     requires: new Decimal(1), // Can be a function that takes requirement increases into account
@@ -77,9 +79,10 @@ addLayer("s", {
 
     }, // Get the current amount of baseResource
     type: "normal", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
-    exponent: 0.5, // Prestige currency exponent
+    exponent: new Decimal(0.5), // Prestige currency exponent
     gainMult() { // Calculate the multiplier for main currency from bonuses
         let mult = new Decimal(1)
+        if (hasAchievement('a', 11)) mult = mult.mul(achievementEffect('a', 11))
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -87,13 +90,7 @@ addLayer("s", {
         return new Decimal(1).mul(buyableEffect(this.layer, 11));
     },
     row: 0, // Row the layer is in on the tree (0 is the first row)
-    hotkeys: [
-        {
-            key: "s", description: "土: 挖一块土", onPress() {
-                if (canReset(this.layer)) doReset(this.layer)
-            }
-        },
-    ],
+    hotkeys: [],
     layerShown() {
         return true
     },
@@ -101,14 +98,19 @@ addLayer("s", {
         11:
             {
                 title: "<h2>小盒子</h2>",
-                description: "增加沙子上限至16",
+                description: "增加沙子上限",
                 cost: new Decimal(10),
                 unlocked() {
                     return player[this.layer].unlocked
-                }, // The upgrade is only visible when this is true
-                // branches: [UPDATE_SAND_EFFECT_1],
+                },
                 onPurchase: () => {
                     player.pointsLimit = new Decimal(16)
+                },
+                effect() {
+                    return new Decimal(16);
+                },
+                effectDisplay(){
+                    return this.effect();
                 },
                 tooltip: "",
                 style: upGradeStyle
@@ -116,30 +118,46 @@ addLayer("s", {
         12:
             {
                 title: "<h2>挖的更快了</h2>",
-                description: "沙子获取效率x1.2",
+                description: "沙子获取效率增加",
                 cost: new Decimal(20),
                 unlocked() {
                     return hasUpgrade('s', 11)
                 },
-                effect: 1.2,
+                effectDisplay() {
+                    return format(this.effect());
+                },
+                effect(){
+                    return new Decimal(1.2)
+                },
                 tooltip: "",
                 style: upGradeStyle
             },
         13:
             {
                 title: "<h2>熟练掌握</h2>",
-                description: `总获取土的数目加成挖的速度\nx2`,
+                description: `总获取沙子的数目加成挖的速度`,
                 cost: new Decimal(45),
                 unlocked() {
                     return hasUpgrade('s', 12)
                 },
+                effectDisplay() {
+                    return format(this.effect())+ "x";
+                },
                 effect() {
-                    let points = player.s.points
-                    let eff = 2
-                    return eff;
+                    let total = player.s.pointsAcquisitionTotal
+                    return total.log10(total+1)
                 },
                 style: upGradeStyle
-            }
+            },
+        14: {
+            title:"<h2>解锁制造台</h2>",
+            description: '用这些土搭个台子吧',
+            cost: new Decimal(120),
+            unlocked() {
+                return hasUpgrade('s', 12);
+            },
+            style: upGradeStyle,
+        }
     },
     buyables: {
         11: {
@@ -147,9 +165,10 @@ addLayer("s", {
             display() {
                 return `
                     <h2>减少税率</h2>\n\n
-                    使沙子的价值^${this.effect()}\n
+                    增加沙子的价值\n
+                    Currently: ^${this.effect()}\n
                     Cost: ${format(this.cost())}土\n
-                    ( ${getBuyableAmount(this.layer, this.id)}/ ${this.purchaseLimit} )已购买
+                    (${getBuyableAmount(this.layer, this.id)} / ${this.purchaseLimit})已购买
                 `;
             },
             canAfford() { return player[this.layer].points.gte(this.cost()) },
@@ -166,8 +185,8 @@ addLayer("s", {
     tabFormat: [
         "main-display",
         ["display-text",
-            function() { return '总计获取了 ' + format(player[this.layer].pointsAcquisitionTotal) + ' 土' },
-            { "color": "red", "font-size": "32px", "font-family": "Comic Sans MS" }],
+            function() { return `总计获取了 ${format(player[this.layer].pointsAcquisitionTotal)} 沙子` },
+            { "color": secondaryColor, "font-size": "32px", "font-family": "Comic Sans MS" }],
         "prestige-button",
         "resource-display",
         "blank",

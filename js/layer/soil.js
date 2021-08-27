@@ -61,14 +61,14 @@ addLayer("s", {
     startData() {
         return {
             unlocked: true,
-            points: new Decimal(1),
-            pointsAcquisitionTotal: new Decimal(1)
+            points: new Decimal(0),
+            pointsAcquisitionTotal: new Decimal(0)
         }
     },
     update(diff) {
         // 计算获取的沙子总量。总量每次增加这一帧获得的沙子数量。如果下一帧到达上限则使用到达上限的所需值
         player[this.layer].pointsAcquisitionTotal = player[this.layer].pointsAcquisitionTotal.add(tmp.pointGen.times(diff))
-        // this.pointsAcquisitionTotal = this.pointsAcquisitionTotal.add(tmp.pointGen.times(diff));
+        player.pointsLimit = upgradeEffect('s', 11)
     },
     color: primaryColor,
     requires: new Decimal(1), // Can be a function that takes requirement increases into account
@@ -94,20 +94,34 @@ addLayer("s", {
     layerShown() {
         return true
     },
+    doReset(resettingLayer) {
+        let keep = [];
+    //     // if (resettingLayer=="s") keep.push("points","best","total","milestones","upgrades");
+    //     // if (resettingLayer=="a") keep.push("points","best","total","milestones","upgrades");
+    //     // if (resettingLayer=="bm") keep.push("points","best","total","milestones","upgrades");
+        if (layers[resettingLayer].row > this.row) {
+            layerDataReset(this.layer, keep)
+            player.s.upgrades = [14]
+        }
+    },
     upgrades: {
         11:
             {
-                title: "<h2>小盒子</h2>",
+                // title: `<h2>${hasUpgrade('c', 11)?'小盒子':'大盒子'}</h2>`,
+                title: `<h2>小盒子</h2>`,
                 description: "增加沙子上限",
                 cost: new Decimal(10),
                 unlocked() {
                     return player[this.layer].unlocked
                 },
-                onPurchase: () => {
-                    player.pointsLimit = new Decimal(16)
+                onPurchase() {
+
                 },
                 effect() {
-                    return new Decimal(16);
+                    let eff = new Decimal(1)
+                    if(hasUpgrade('s', 11)) eff = new Decimal(16)
+                    if(hasUpgrade('c', 11)) eff = new Decimal(3000)
+                    return eff
                 },
                 effectDisplay(){
                     return this.effect();
@@ -157,7 +171,7 @@ addLayer("s", {
             description: '用这些土搭个台子吧',
             cost: new Decimal(120),
             unlocked() {
-                return hasUpgrade('s', 12);
+                return hasUpgrade('s', 12) || player.c.unlocked;
             },
             style: upGradeStyle,
         }

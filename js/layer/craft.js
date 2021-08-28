@@ -1,45 +1,45 @@
-// // 主要颜色
-// const primaryColor = '#ffc800'
-// // 选中颜色
-// const chosenColor = '#c9a627'
-// // 次要颜色
-// const secondaryColor = '#f4ffff'
-// // 不可选颜色
-// const negativeColor = '#777777'
-//
-// activeButtonColorStyle = {color: secondaryColor + '!important'}
-// chosenButtonColorStyle = {background: chosenColor, color: secondaryColor}
-// lockedButtionColorStyle = {background: negativeColor, color: secondaryColor}
-//
-// /**
-//  * add border style to a style object
-//  *
-//  * @param {Object} style target style object to add border style
-//  * @return {Object} result style object
-//  */
-// function addBorderStyle(style) {
-//     style['border-radius'] = '5px'
-//     style['margin'] = '5px'
-//     return style
-// }
-//
-// /**
-//  * get upgrade button style
-//  *
-//  * @returns {Object} some of the upgrade button style
-//  */
-// function upGradeStyle() {
-//     let style
-//     if (hasUpgrade(this.layer, this.id)) {
-//         style = chosenButtonColorStyle
-//     } else if (canAffordUpgrade(this.layer, this.id)) {
-//         style = activeButtonColorStyle
-//     } else {
-//         style = lockedButtionColorStyle
-//     }
-//     style = addBorderStyle(style)
-//     return style
-// }
+// 主要颜色
+let primaryColor_c = '#ffc800'
+// 选中颜色
+let chosenColor_c = '#c9a627'
+// 次要颜色
+let secondaryColor_c = '#f4ffff'
+// 不可选颜色
+let negativeColor_c = '#777777'
+
+activeButtonColorStyle_c = {color: secondaryColor_c + '!important'}
+chosenButtonColorStyle_c = {background: chosenColor_c, color: secondaryColor_c}
+lockedButtionColorStyle_c = {background: negativeColor_c, color: secondaryColor_c}
+
+/**
+ * add border style to a style object
+ *
+ * @param {Object} style target style object to add border style
+ * @return {Object} result style object
+ */
+function addBorderStyle_c(style) {
+    style['border-radius'] = '5px'
+    style['margin'] = '5px'
+    return style
+}
+
+/**
+ * get upgrade button style
+ *
+ * @returns {Object} some of the upgrade button style
+ */
+function upGradeStyle_c() {
+    let style
+    if (hasUpgrade(this.layer, this.id)) {
+        style = chosenButtonColorStyle_c
+    } else if (canAffordUpgrade(this.layer, this.id)) {
+        style = activeButtonColorStyle_c
+    } else {
+        style = lockedButtionColorStyle_c
+    }
+    style = addBorderStyle_c(style)
+    return style
+}
 
 addLayer('c', {
     name: "craft", // This is optional, only used in a few places, If absent it just uses the layer id.
@@ -54,6 +54,7 @@ addLayer('c', {
     update(diff) {
 
     },
+    color: primaryColor_c,
     requires: new Decimal(150), // Can be a function that takes requirement increases into account
     resource: "黏土", // Name of prestige currency
     baseResource: "土", // Name of resource prestige is based on
@@ -61,7 +62,7 @@ addLayer('c', {
         return player.s.points
     }, // Get the current amount of baseResource
     type: "normal", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
-    exponent: new Decimal(0.5), // Prestige currency exponent
+    exponent: new Decimal(0.75), // Prestige currency exponent
     branches: ['s'],
     gainMult() { // Calculate the multiplier for main currency from bonuses
         let mult = new Decimal(1)
@@ -94,11 +95,11 @@ addLayer('c', {
                     return this.effect();
                 },
                 tooltip: "",
-                // style: upGradeStyle
+                style: upGradeStyle_c
             },
         12: {
             title: "<h2>动力压实版</h2>",
-            description: '每秒自动转化0.5单位沙子至土（还没做呢）',
+            description() {return `沙子>10时，每秒自动转化${upgradeEffect('c', 12)}单位沙子至土`},
             cost: new Decimal(2),
             unlocked() {
                 return player[this.layer].unlocked
@@ -106,13 +107,13 @@ addLayer('c', {
             onPurchase: () => {
             },
             effect() {
-                return new Decimal(0.5);
+                return new Decimal(0.1);
             },
             effectDisplay() {
                 return this.effect()+'/s';
             },
             tooltip: "",
-            // style: upGradeStyle
+            style: upGradeStyle_c
         }
     },
     tabFormat: [

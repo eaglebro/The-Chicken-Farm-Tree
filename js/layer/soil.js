@@ -1,11 +1,11 @@
 // 主要颜色
-const primaryColor = '#ff7f00'
+let primaryColor = '#ff7f00'
 // 选中颜色
-const chosenColor = '#c97927'
+let chosenColor = '#c97927'
 // 次要颜色
-const secondaryColor = '#f4ffff'
+let secondaryColor = '#f4ffff'
 // 不可选颜色
-const negativeColor = '#777777'
+let negativeColor = '#777777'
 
 activeButtonColorStyle = {color: secondaryColor + '!important'}
 chosenButtonColorStyle = {background: chosenColor, color: secondaryColor}
@@ -65,10 +65,21 @@ addLayer("s", {
             pointsAcquisitionTotal: new Decimal(0)
         }
     },
+    onPrestige(gain) {
+        player.s.pointsAcquisitionTotal = player.s.pointsAcquisitionTotal.add(gain)
+    },
     update(diff) {
         // 计算获取的沙子总量。总量每次增加这一帧获得的沙子数量。如果下一帧到达上限则使用到达上限的所需值
-        player[this.layer].pointsAcquisitionTotal = player[this.layer].pointsAcquisitionTotal.add(tmp.pointGen.times(diff))
         player.pointsLimit = upgradeEffect('s', 11)
+        // 自动购买
+        if (hasUpgrade('c', 12) && player.points.gt(10)) {
+            let baseResourceConvert = upgradeEffect('c', 12).mul(diff);
+            let soilToConvert = baseResourceConvert.times(layers.s.exponent.mul(layers.s.gainExp()))
+            player.points = player.points.minus(baseResourceConvert)
+            player.s.points = player.s.points.add(soilToConvert)
+            // 总获取量也加一下
+            player.s.pointsAcquisitionTotal = player.s.pointsAcquisitionTotal.add(soilToConvert)
+        }
     },
     color: primaryColor,
     requires: new Decimal(1), // Can be a function that takes requirement increases into account
@@ -151,7 +162,7 @@ addLayer("s", {
         13:
             {
                 title: "<h2>熟练掌握</h2>",
-                description: `总获取沙子的数目加成挖的速度`,
+                description: `总获取土的数目加成挖的速度`,
                 cost: new Decimal(45),
                 unlocked() {
                     return hasUpgrade('s', 12)
@@ -204,7 +215,7 @@ addLayer("s", {
     tabFormat: [
         "main-display",
         ["display-text",
-            function() { return `总计获取了 ${format(player[this.layer].pointsAcquisitionTotal)} 沙子` },
+            function() { return `总计获取了 ${format(player[this.layer].pointsAcquisitionTotal)} 土` },
             { "color": secondaryColor, "font-size": "32px", "font-family": "Comic Sans MS" }],
         "prestige-button",
         "resource-display",

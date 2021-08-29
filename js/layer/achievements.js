@@ -39,7 +39,7 @@ addLayer("a", {
             tooltip() {
                 return `<div style="font-size: 14px">解锁制造台<br>
                 ${(hasAchievement('a', 11) ? '<br>' +
-                    '奖励：挖沙子的速度^' + format(this.effect()) + '<br>解锁的成就越多加成越高' : '')}
+                    '奖励：挖沙子的速度x' + format(this.effect()) + '<br>解锁的成就越多加成越高' : '')}
                 </div>`;
             },
             effect() {

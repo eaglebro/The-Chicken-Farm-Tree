@@ -119,7 +119,7 @@ addLayer("s", {
         11:
             {
                 // title: `<h2>${hasUpgrade('c', 11)?'小盒子':'大盒子'}</h2>`,
-                title(){ return `<h2>${hasUpgrade('c', 11)?'大盒子': '小盒子'}</h2>`},
+                title(){ return `<h2>su11: ${hasUpgrade('c', 11)?'大盒子': '小盒子'}</h2>`},
                 description: "增加沙子上限",
                 cost: new Decimal(10),
                 unlocked() {
@@ -133,6 +133,7 @@ addLayer("s", {
                     if(hasUpgrade('s', 11)) {
                         eff = new Decimal(16)
                         if(hasUpgrade('c', 11)) eff = new Decimal(3000)
+                        if (hasUpgrade('s', 21)) eff = eff.mul(2)
                     }
                     return eff
                 },
@@ -144,24 +145,29 @@ addLayer("s", {
             },
         12:
             {
-                title: "<h2>挖的更快了</h2>",
+                title: "<h2>su12: 挖的更快了</h2>",
                 description: "沙子获取效率增加",
                 cost: new Decimal(20),
                 unlocked() {
                     return hasUpgrade('s', 11)
                 },
                 effectDisplay() {
-                    return format(this.effect());
+                    return 'x' + format(this.effect());
                 },
                 effect(){
-                    return new Decimal(1.2)
+                    // 基础加成
+                    let effBase = new Decimal(1.2)
+                    let eff = effBase
+                    if (hasUpgrade('s', 15)) eff = effBase.mul(upgradeEffect('s', 15));
+                    if (hasUpgrade('s', 21)) eff = eff.mul(upgradeEffect('s', 21));
+                    return eff
                 },
                 tooltip: "",
                 style: upGradeStyle
             },
         13:
             {
-                title: "<h2>熟练掌握</h2>",
+                title: "<h2>su13: 熟练掌握</h2>",
                 description: `总获取土的数目加成挖的速度`,
                 cost: new Decimal(45),
                 unlocked() {
@@ -180,13 +186,46 @@ addLayer("s", {
                 style: upGradeStyle
             },
         14: {
-            title:"<h2>解锁制造台</h2>",
+            title:"<h2>su14: 解锁制造台</h2>",
             description: '用这些土搭个台子吧',
             cost: new Decimal(120),
             unlocked() {
                 return hasUpgrade('s', 12) || player.c.unlocked;
             },
             style: upGradeStyle,
+        },
+        15: {
+            title:"<h2>su15: 升级工具</h2>",
+            description: '增加su12和su13的效果',
+            cost: new Decimal(375),
+            unlocked() {
+                return hasUpgrade('s', 14);
+            },
+            effectDisplay() {
+                return `x1.2`
+            },
+            effect() {
+                return new Decimal(1.2)
+            },
+            style: upGradeStyle,
+        },
+        21: {
+            title: '<h2>su21</h2>',
+            description: '除su14，第一行所有效果x2',
+            cost: new Decimal (900),
+            effect() {
+                return new Decimal(2);
+            },
+            style: upGradeStyle
+        },
+        22: {
+            title: '<h2>su22</h2>',
+            description: '每秒自动点击一次购买按钮(还没做)',
+            cost: new Decimal(1350),
+            effect() {
+                return new Decimal(1)
+            },
+            style: upGradeStyle
         }
     },
     buyables: {

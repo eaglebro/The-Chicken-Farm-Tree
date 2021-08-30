@@ -18,12 +18,12 @@ let VERSION = {
 
 let changelog = `<h1>Changelog:</h1><br>
 	<h2>v0.0.4</h2><br>
-		-增加制造里程碑m1，m2
-		-增加制造升级’回扣‘
-		-实装su22效果
-		-增加节点建筑
-		-修复成就点数显示不正确的bug
-		-修复su21，su22在没达到里程碑就可以显示的bug
+		-增加制造里程碑m1，m2<br>
+		-增加制造升级’回扣‘<br>
+		-实装su22效果<br>
+		-增加节点建筑<br>
+		-修复成就点数显示不正确的bug<br>
+		-修复su21，su22在没达到里程碑就可以显示的bug<br>
 	<h2>v0.0.3</h2><br>
 		-Add two upgrades to Craft layer<br>
 		-Bug fixed<br>

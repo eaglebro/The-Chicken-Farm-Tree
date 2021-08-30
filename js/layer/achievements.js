@@ -47,32 +47,16 @@ addLayer("a", {
             }
         }
     },
-    midsection: ["grid", "blank"],
-        // grid: {
-        //     maxRows: 3,
-        //     rows: 2,
-        //     cols: 2,
-        //     getStartData(id) {
-        //         return id
-        //     },
-        //     getUnlocked(id) { // Default
-        //         return true
-        //     },
-        //     getCanClick(data, id) {
-        //         return player.points.eq(10)
-        //     },
-        //     getStyle(data, id) {
-        //         return {'background-color': '#'+ (data*1234%999999)}
-        //     },
-        //     onClick(data, id) { // Don't forget onHold
-        //         player[this.layer].grid[id]++
-        //     },
-        //     getTitle(data, id) {
-        //         return "Gridable #" + id
-        //     },
-        //     getDisplay(data, id) {
-        //         return data
-        //     },
-        // },
+    tabFormat: [
+        // "main-display",
+        ["display-text",
+            function() { return `共有${player.a.achievements.length}点成就点数` },
+            { "color": 'yellow', "font-size": "32px", "font-family": "Comic Sans MS" }],
+        "blank",
+        "blank",
+        "blank",
+        "blank",
+        "achievements",
+    ],
     },
 )

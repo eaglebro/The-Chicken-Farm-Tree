@@ -62,7 +62,8 @@ addLayer("s", {
         return {
             unlocked: true,
             points: new Decimal(0),
-            pointsAcquisitionTotal: new Decimal(0)
+            pointsAcquisitionTotal: new Decimal(0),
+            tick: new Decimal(0)
         }
     },
     onPrestige(gain) {
@@ -87,8 +88,17 @@ addLayer("s", {
     baseResource: "沙子", // Name of resource prestige is based on
     baseAmount() {
         return player.points
-
-    }, // Get the current amount of baseResource
+    },
+    automate() {
+        if(!hasUpgrade('s', 22)) return
+        // 自动购买
+        if (player.s.tick < 30) {
+            player.s.tick = player.s.tick.add(1);
+        } else {
+            doReset(this.layer, false)
+            player.s.tick = new Decimal(0)
+        }
+    },
     type: "normal", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
     exponent: new Decimal(0.5), // Prestige currency exponent
     gainMult() { // Calculate the multiplier for main currency from bonuses
@@ -107,18 +117,16 @@ addLayer("s", {
     },
     doReset(resettingLayer) {
         let keep = [];
-    //     // if (resettingLayer=="s") keep.push("points","best","total","milestones","upgrades");
-    //     // if (resettingLayer=="a") keep.push("points","best","total","milestones","upgrades");
-    //     // if (resettingLayer=="bm") keep.push("points","best","total","milestones","upgrades");
+        let points = player.s.points
         if (layers[resettingLayer].row > this.row) {
             layerDataReset(this.layer, keep)
             player.s.upgrades = [14]
+            if (hasUpgrade('c', 13)) player.s.points = points.mul(upgradeEffect('c', 13))
         }
     },
     upgrades: {
         11:
             {
-                // title: `<h2>${hasUpgrade('c', 11)?'小盒子':'大盒子'}</h2>`,
                 title(){ return `<h2>su11: ${hasUpgrade('c', 11)?'大盒子': '小盒子'}</h2>`},
                 description: "增加沙子上限",
                 cost: new Decimal(10),
@@ -133,7 +141,7 @@ addLayer("s", {
                     if(hasUpgrade('s', 11)) {
                         eff = new Decimal(16)
                         if(hasUpgrade('c', 11)) eff = new Decimal(3000)
-                        if (hasUpgrade('s', 21)) eff = eff.mul(2)
+                        if (hasUpgrade('s', 21)) eff = eff.mul(upgradeEffect('s', 21))
                     }
                     return eff
                 },
@@ -181,7 +189,9 @@ addLayer("s", {
                     if (!total) {
                         player.s.pointsAcquisitionTotal = new Decimal(1);
                     }
-                    return ((total).max(10).log10()).max(1);
+                    let eff = ((total).max(10).log10()).max(1);
+                    if (hasUpgrade('s', 21)) eff = eff.mul(upgradeEffect('s', 21))
+                    return eff;
                 },
                 style: upGradeStyle
             },
@@ -202,10 +212,12 @@ addLayer("s", {
                 return hasUpgrade('s', 14);
             },
             effectDisplay() {
-                return `x1.2`
+                return `x${this.effect()}`
             },
             effect() {
-                return new Decimal(1.2)
+                let eff =  new Decimal(1.2)
+                if (hasUpgrade('s', 21)) eff = eff.mul(upgradeEffect('s', 21))
+                return eff
             },
             style: upGradeStyle,
         },
@@ -213,6 +225,10 @@ addLayer("s", {
             title: '<h2>su21</h2>',
             description: '除su14，第一行所有效果x2',
             cost: new Decimal (900),
+            unlocked(){
+                return hasMilestone('c', 0)
+                    && hasUpgrade('s', 15);
+            },
             effect() {
                 return new Decimal(2);
             },
@@ -220,8 +236,12 @@ addLayer("s", {
         },
         22: {
             title: '<h2>su22</h2>',
-            description: '每秒自动点击一次购买按钮(还没做)',
+            description: '每30tick自动点击一次购买按钮',
             cost: new Decimal(1350),
+            unlocked(){
+                return hasMilestone('c', 0)
+                    && hasUpgrade('s', 15);
+            },
             effect() {
                 return new Decimal(1)
             },

@@ -114,6 +114,27 @@ addLayer('c', {
             },
             tooltip: "",
             style: upGradeStyle_c
+        },
+        13: {
+            title: "<h2>回扣</h2>",
+            description() {
+                return "每次重置后保留一定量的土";
+            },
+            unlocked() {
+                return hasUpgrade('c', 12);
+            },
+            effect() {
+                let baseEff = new Decimal(1).div(20);
+                return baseEff;
+            },
+            cost() {
+              return new Decimal(35)
+            },
+            effectDisplay(){
+                return this.effect().mul(100) + '%';
+            },
+            tooltip: "总得留一手，对吧",
+            style: upGradeStyle_c
         }
     },
     milestones: {
@@ -121,6 +142,13 @@ addLayer('c', {
             requirementDescription: "m1: 5黏土",
             effectDescription: "解锁第二行土升级",
             done() { return player.c.points.gte(5) }
+        },
+        1: {
+            requirementDescription: "m2: 60黏土",
+            effectDescription: "解锁建筑",
+            done() {
+                return player.c.points.gte(60);
+            }
         }
     },
     tabFormat: [

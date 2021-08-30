@@ -3,7 +3,7 @@ let modInfo = {
 	id: "chickenfarmmod",
 	author: "jibro",
 	pointsName: "沙子",
-	modFiles: ['layer/achievements.js', "layer/soil.js", "layer/craft.js", "layer/earthworm.js", "tree.js"],
+	modFiles: ['layer/achievements.js', "layer/soil.js", "layer/craft.js","layer/build.js", "layer/earthworm.js", "tree.js"],
 	discordName: "",
 	discordLink: "",
 	initialStartPoints: new Decimal (1), // Used for hard resets and new players
@@ -12,11 +12,18 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.0.3",
+	num: "0.0.4",
 	name: "Soil Farm",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
+	<h2>v0.0.4</h2><br>
+		-增加制造里程碑m1，m2
+		-增加制造升级’回扣‘
+		-实装su22效果
+		-增加节点建筑
+		-修复成就点数显示不正确的bug
+		-修复su21，su22在没达到里程碑就可以显示的bug
 	<h2>v0.0.3</h2><br>
 		-Add two upgrades to Craft layer<br>
 		-Bug fixed<br>

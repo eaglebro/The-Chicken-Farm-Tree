@@ -47,7 +47,7 @@ addLayer('b', {
     position: 1, // Horizontal position wit1hin a row. By default it uses the layer id and sorts in alphabetical order
     startData() {
         return {
-            unlocked() {return hasUpgrade('s', 14)},
+            unlocked() {return milestone('c', 1)},
             points: new Decimal(0),
         }
     },
@@ -56,14 +56,14 @@ addLayer('b', {
     },
     color: primaryColor_c,
     requires: new Decimal(150), // Can be a function that takes requirement increases into account
-    resource: "黏土", // Name of prestige currency
-    baseResource: "土", // Name of resource prestige is based on
+    resource: "砖", // Name of prestige currency
+    baseResource: "黏土", // Name of resource prestige is based on
     baseAmount() {
         return player.s.points
     }, // Get the current amount of baseResource
     type: "normal", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
     exponent: new Decimal(0.75), // Prestige currency expone1nt
-    branches: ['s'],
+    branches: [],
     gainMult() { // Calculate the multiplier for main currency from bonuses
         let mult = new Decimal(1)
         return mult
@@ -72,7 +72,7 @@ addLayer('b', {
         // 达到2时1:1生成
         return new Decimal(1)
     },
-    row: 1, // Row the layer is in on the tree (0 is the first row)
+    row: 0, // Row the layer is in on the tree (0 is the first row)
     hotkeys: [],
     layerShown() {
         return hasUpgrade('s', 14)
@@ -80,52 +80,44 @@ addLayer('b', {
     upgrades: {
         11:
             {
-                title: "<h2>大盒子</h2>",
-                description: '使“小盒子”升级变为”大盒子“，沙子上限提高至3000',
-                cost: new Decimal(1),
+                title: "<h2>土培箱(还没做呢)</h2>",
+                description: '解锁土培箱，以培养蚯蚓',
+                cost: new Decimal(30),
                 unlocked() {
                     return player[this.layer].unlocked
-                },
-                onPurchase: () => {
-                },
-                effect() {
-                    return new Decimal(3000);
-                },
-                effectDisplay() {
-                    return this.effect();
                 },
                 tooltip: "",
                 style: upGradeStyle_c
             },
-        12: {
-            title: "<h2>动力压实版</h2>",
-            description() {return `沙子>10时，每秒自动转化${upgradeEffect('c', 12)}单位沙子至土`},
-            cost: new Decimal(2),
-            unlocked() {
-                return player[this.layer].unlocked
-            },
-            onPurchase: () => {
-            },
-            effect() {
-                return new Decimal(0.1);
-            },
-            effectDisplay() {
-                return this.effect()+'/s';
-            },
-            tooltip: "",
-            style: upGradeStyle_c
-        }
+        // 12: {
+        //     title: "<h2>动力压实版</h2>",
+        //     description() {return `沙子>10时，每秒自动转化${upgradeEffect('c', 12)}单位沙子至土`},
+        //     cost: new Decimal(2),
+        //     unlocked() {
+        //         return player[this.layer].unlocked
+        //     },
+        //     onPurchase: () => {
+        //     },
+        //     effect() {
+        //         return new Decimal(0.1);
+        //     },
+        //     effectDisplay() {
+        //         return this.effect()+'/s';
+        //     },
+        //     tooltip: "",
+        //     style: upGradeStyle_c
+        // }
     },
     milestones: {
-        0: {
-            requirementDescription: "m1: 5黏土",
-            effectDescription: "解锁第二行土升级",
-            done() { return player.c.points.gte(5) }
-        }
+        // 0: {
+        //     requirementDescription: "m1: 5黏土",
+        //     effectDescription: "解锁第二行土升级",
+        //     done() { return player.c.points.gte(5) }
+        // }
     },
     tabFormat: [
         "main-display",
-        "prestige-button",
+        // "prestige-button",
         "resource-display",
         "blank",
         "blank",
@@ -133,7 +125,7 @@ addLayer('b', {
         "blank",
         "upgrades",
         "buyables",
-        ["display-text", '里程碑', {"color": secondaryColor_c}],
+        // ["display-text", '里程碑', {"color": secondaryColor_c}],
         "milestones"
     ]
 })

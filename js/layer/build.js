@@ -78,7 +78,7 @@ addLayer('b', {
     row: 0, // Row the layer is in on the tree (0 is the first row)
     hotkeys: [],
     layerShown() {
-        return hasMilestone('c', 2)
+        return hasMilestone('c', 1)
     },
     clickables: {
         11: {

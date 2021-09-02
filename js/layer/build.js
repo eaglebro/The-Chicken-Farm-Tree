@@ -1,15 +1,15 @@
 // 主要颜色
-let primaryColor_b = '#ffc800'
+let primaryColor_b = '#73ea0a'
 // 选中颜色
-let chosenColor_b = '#c9a627'
+let chosenColor_b = '#58b331'
 // 次要颜色
 let secondaryColor_b = '#f4ffff'
 // 不可选颜色
 let negativeColor_b = '#777777'
 
-activeButtonColorStyle_c = {color: secondaryColor_b + '!important'}
-chosenButtonColorStyle_c = {background: chosenColor_b, color: secondaryColor_b}
-lockedButtionColorStyle_c = {background: negativeColor_b, color: secondaryColor_b}
+activeButtonColorStyle_b = {background: primaryColor_b, color: secondaryColor_b + '!important'}
+chosenButtonColorStyle_b = {background: chosenColor_b, color: secondaryColor_b}
+lockedButtionColorStyle_b = {background: negativeColor_b, color: secondaryColor_b}
 
 /**
  * add border style to a style object
@@ -17,7 +17,7 @@ lockedButtionColorStyle_c = {background: negativeColor_b, color: secondaryColor_
  * @param {Object} style target style object to add border style
  * @return {Object} result style object
  */
-function addBorderStyle_c(style) {
+function addBorderStyle_b(style) {
     style['border-radius'] = '5px'
     style['margin'] = '5px'
     return style
@@ -28,16 +28,16 @@ function addBorderStyle_c(style) {
  *
  * @returns {Object} some of the upgrade button style
  */
-function upGradeStyle_c() {
+function upGradeStyle_b() {
     let style
     if (hasUpgrade(this.layer, this.id)) {
-        style = chosenButtonColorStyle_c
+        style = chosenButtonColorStyle_b
     } else if (canAffordUpgrade(this.layer, this.id)) {
-        style = activeButtonColorStyle_c
+        style = activeButtonColorStyle_b
     } else {
-        style = lockedButtionColorStyle_c
+        style = lockedButtionColorStyle_b
     }
-    style = addBorderStyle_c(style)
+    style = addBorderStyle_b(style)
     return style
 }
 
@@ -47,25 +47,28 @@ addLayer('b', {
     position: 1, // Horizontal position wit1hin a row. By default it uses the layer id and sorts in alphabetical order
     startData() {
         return {
-            unlocked() {return milestone('c', 1)},
+            unlocked() {
+                return milestone('c', 1)
+            },
             points: new Decimal(0),
         }
     },
     update(diff) {
-
+        // 烧砖
+        layers.b.clickables[11].update(diff)
     },
-    color: primaryColor_c,
+    color: primaryColor_b,
     requires: new Decimal(150), // Can be a function that takes requirement increases into account
     resource: "砖", // Name of prestige currency
     baseResource: "黏土", // Name of resource prestige is based on
     baseAmount() {
-        return player.s.points
+        return player.c.points
     }, // Get the current amount of baseResource
     type: "normal", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
-    exponent: new Decimal(0.75), // Prestige currency expone1nt
+    exponent: new Decimal(1), // Prestige currency expone1nt
     branches: [],
     gainMult() { // Calculate the multiplier for main currency from bonuses
-        let mult = new Decimal(1)
+        let mult = new Decimal(0.5)
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -77,6 +80,47 @@ addLayer('b', {
     layerShown() {
         return hasUpgrade('s', 14)
     },
+    clickables: {
+        11: {
+            title(){
+                return `<h2>烧砖${this.abOn?'(进行中)':'(已停止)'}</h2><br>
+                    持续烧砖，花费${this.cost()}黏土，每${this.tick.toFixed(2)+'/'+this.abtick()}秒烧制一块砖
+                    `
+            },
+            display() {
+            },
+            tick: new Decimal(0),
+            cost() {
+                return new Decimal(20)
+            },
+            abtick() {
+                return new Decimal(30)
+            },
+            abOn: false,
+            onClick(){
+                this.abOn = !this.abOn
+                this.tick = new Decimal(0)
+            },
+            style() {
+                return this.abOn ? chosenButtonColorStyle_b: activeButtonColorStyle_b
+            },
+            canClick: true,
+            update(diff) {
+                if (!this.abOn) return
+                if (this.tick.lt(this.abtick())) {
+                    this.tick = this.tick.add(diff);
+                } else {
+                    if (player.c.points > this.cost()) {
+                        player.c.points = player.c.points.minus(this.cost());
+                        player.b.points = player.b.points.add(1)
+                    }
+                    this.tick = new Decimal(0)
+                }
+                this.display()
+            }
+        },
+
+    },
     upgrades: {
         11:
             {
@@ -87,7 +131,7 @@ addLayer('b', {
                     return player[this.layer].unlocked
                 },
                 tooltip: "",
-                style: upGradeStyle_c
+                style: upGradeStyle_b
             },
         // 12: {
         //     title: "<h2>动力压实版</h2>",
@@ -105,7 +149,7 @@ addLayer('b', {
         //         return this.effect()+'/s';
         //     },
         //     tooltip: "",
-        //     style: upGradeStyle_c
+        //     style: upGradeStyle_b
         // }
     },
     milestones: {
@@ -118,7 +162,8 @@ addLayer('b', {
     tabFormat: [
         "main-display",
         // "prestige-button",
-        "resource-display",
+        // "resource-display",
+        "clickables",
         "blank",
         "blank",
         "blank",

@@ -61,6 +61,8 @@ function getPointGen() {
 	if (hasUpgrade('s', 13)) gain = gain.times(upgradeEffect('s', 13));
 	if (hasAchievement('a', 11)) gain = gain.times(achievementEffect('a', 11));
 	if (hasAchievement('a', 12)) gain = gain.times(achievementEffect('a', 12));
+	if (hasUpgrade('s', 24)) gain = gain.times(upgradeEffect('s', 24));
+	if (hasAchievement('a', 13)) gain = gain.times(achievementEffect('a', 13));
 	return gain
 }
 

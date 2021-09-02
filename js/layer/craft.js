@@ -70,7 +70,9 @@ addLayer('c', {
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
         // 达到2时1:1生成
-        return new Decimal(1)
+        let baseExp = new Decimal(1);
+        if (hasUpgrade('s', 23)) baseExp = baseExp.mul(upgradeEffect('s', 23))
+        return baseExp
     },
     row: 1, // Row the layer is in on the tree (0 is the first row)
     hotkeys: [],

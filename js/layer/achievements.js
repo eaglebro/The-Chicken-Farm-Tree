@@ -38,12 +38,29 @@ addLayer("a", {
             },
             tooltip() {
                 return `<div style="font-size: 14px">解锁制造台<br>
-                ${(hasAchievement('a', 11) ? '<br>' +
+                ${(hasAchievement('a', 12) ? '<br>' +
                     '奖励：挖沙子的速度x' + format(this.effect()) + '<br>解锁的成就越多加成越高' : '')}
                 </div>`;
             },
             effect() {
                 return new Decimal(player.a.achievements.length).max(1).pow(1.5);
+            }
+        },
+        13: {
+            name: "建筑师",
+            done() {
+                return hasMilestone('c',1)
+                },
+            tooltip() {
+                return `<div style="font-size: 14px">解锁建筑节点
+                ${(hasAchievement('a', 13) ? '<br>奖励：挖沙子的速度和沙子价值x' + this.effect() : '')}
+                </div>`
+            },
+            effect() {
+                return new Decimal(1.05);
+            },
+            onComplete() {
+                player.a.points  = player.a.points.add(1)
             }
         }
     },

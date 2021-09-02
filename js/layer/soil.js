@@ -104,6 +104,7 @@ addLayer("s", {
     gainMult() { // Calculate the multiplier for main currency from bonuses
         let mult = new Decimal(1)
         if (hasAchievement('a', 11)) mult = mult.mul(achievementEffect('a', 11))
+        if (hasAchievement('a', 13)) mult = mult.mul(achievementEffect('a', 13))
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -246,6 +247,46 @@ addLayer("s", {
                 return new Decimal(1)
             },
             style: upGradeStyle
+        },
+        23: {
+            title() {
+                return "<h2>su23</h2>";
+            },
+            description: '黏土涨价速度放缓',
+            unlocked() {
+                return hasMilestone('c', 0)
+                    && hasUpgrade('s', 15);
+            },
+            cost() {
+                return new Decimal(3750)
+            },
+            effectDisplay() {
+                return this.effect() + 'x'
+            },
+            effect(){
+                return new Decimal(1.03)
+            },
+            style:upGradeStyle
+        },
+        24: {
+            title() {
+                return "<h2>su24</h2>"
+            },
+            description: '挖沙子的速度x获得的成就数目',
+            cost() {
+                return new Decimal(12500)
+            },
+            unlocked() {
+                return hasMilestone('c', 0)
+                    && hasUpgrade('s', 15);
+            },
+            effect(){
+                return new Decimal(player.a.achievements.length)
+            },
+            effectDisplay(){
+                return 'x' + this.effect();
+            },
+            style:upGradeStyle
         }
     },
     buyables: {

@@ -90,7 +90,7 @@ addLayer("s", {
         return player.points
     },
     automate() {
-        if(!hasUpgrade('s', 22)) return
+        if (!hasUpgrade('s', 22)) return
         // 自动购买
         if (player.s.tick < 30) {
             player.s.tick = player.s.tick.add(1);
@@ -128,7 +128,9 @@ addLayer("s", {
     upgrades: {
         11:
             {
-                title(){ return `<h2>su11: ${hasUpgrade('c', 11)?'大盒子': '小盒子'}</h2>`},
+                title() {
+                    return `<h2>su11: ${hasUpgrade('c', 11) ? '大盒子' : '小盒子'}</h2>`
+                },
                 description: "增加沙子上限",
                 cost: new Decimal(10),
                 unlocked() {
@@ -139,14 +141,14 @@ addLayer("s", {
                 },
                 effect() {
                     let eff = new Decimal(1)
-                    if(hasUpgrade('s', 11)) {
+                    if (hasUpgrade('s', 11)) {
                         eff = new Decimal(16)
-                        if(hasUpgrade('c', 11)) eff = new Decimal(3000)
+                        if (hasUpgrade('c', 11)) eff = new Decimal(3000)
                         if (hasUpgrade('s', 21)) eff = eff.mul(upgradeEffect('s', 21))
                     }
                     return eff
                 },
-                effectDisplay(){
+                effectDisplay() {
                     return this.effect();
                 },
                 tooltip: "",
@@ -163,7 +165,7 @@ addLayer("s", {
                 effectDisplay() {
                     return 'x' + format(this.effect());
                 },
-                effect(){
+                effect() {
                     // 基础加成
                     let effBase = new Decimal(1.2)
                     let eff = effBase
@@ -183,7 +185,7 @@ addLayer("s", {
                     return hasUpgrade('s', 12)
                 },
                 effectDisplay() {
-                    return format(this.effect())+ "x";
+                    return format(this.effect()) + "x";
                 },
                 effect() {
                     let total = player.s.pointsAcquisitionTotal
@@ -198,7 +200,7 @@ addLayer("s", {
                 style: upGradeStyle
             },
         14: {
-            title:"<h2>su14: 解锁制造台</h2>",
+            title: "<h2>su14: 解锁制造台</h2>",
             description: '用这些土搭个台子吧',
             cost: new Decimal(120),
             unlocked() {
@@ -207,7 +209,7 @@ addLayer("s", {
             style: upGradeStyle,
         },
         15: {
-            title:"<h2>su15: 升级工具</h2>",
+            title: "<h2>su15: 升级工具</h2>",
             description: '增加su12和su13的效果',
             cost: new Decimal(375),
             unlocked() {
@@ -217,7 +219,7 @@ addLayer("s", {
                 return `x${this.effect()}`
             },
             effect() {
-                let eff =  new Decimal(1.2)
+                let eff = new Decimal(1.2)
                 if (hasUpgrade('s', 21)) eff = eff.mul(upgradeEffect('s', 21))
                 return eff
             },
@@ -226,8 +228,8 @@ addLayer("s", {
         21: {
             title: '<h2>su21</h2>',
             description: '除su14，第一行所有效果x2',
-            cost: new Decimal (900),
-            unlocked(){
+            cost: new Decimal(900),
+            unlocked() {
                 return hasMilestone('c', 0)
                     && hasUpgrade('s', 15);
             },
@@ -240,7 +242,7 @@ addLayer("s", {
             title: '<h2>su22</h2>',
             description: '每30tick自动点击一次购买按钮',
             cost: new Decimal(1350),
-            unlocked(){
+            unlocked() {
                 return hasMilestone('c', 0)
                     && hasUpgrade('s', 15);
             },
@@ -264,10 +266,10 @@ addLayer("s", {
             effectDisplay() {
                 return this.effect() + 'x'
             },
-            effect(){
+            effect() {
                 return new Decimal(1.03)
             },
-            style:upGradeStyle
+            style: upGradeStyle
         },
         24: {
             title() {
@@ -281,13 +283,13 @@ addLayer("s", {
                 return hasMilestone('c', 0)
                     && hasUpgrade('s', 15);
             },
-            effect(){
+            effect() {
                 return new Decimal(player.a.achievements.length)
             },
-            effectDisplay(){
+            effectDisplay() {
                 return 'x' + this.effect();
             },
-            style:upGradeStyle
+            style: upGradeStyle
         },
         25: {
             title() {
@@ -299,12 +301,15 @@ addLayer("s", {
             unlocked() {
                 return hasMilestone('c', 0)
                     && hasUpgrade('s', 15);
-            }
+            },
+            style: upGradeStyle
         }
     },
     buyables: {
         11: {
-            cost(x) { return new Decimal(x).pow(x) },
+            cost(x) {
+                return new Decimal(x).pow(x)
+            },
             display() {
                 return `
                     <h2>减少税率</h2>\n\n
@@ -314,13 +319,16 @@ addLayer("s", {
                     (${getBuyableAmount(this.layer, this.id)} / ${this.purchaseLimit})已购买
                 `;
             },
-            canAfford() { return player[this.layer].points.gte(this.cost()) },
+            canAfford() {
+                return player[this.layer].points.gte(this.cost())
+            },
             buy() {
                 player[this.layer].points = player[this.layer].points.sub(this.cost())
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             effect(x) {
-                return format(new Decimal(1).add(new Decimal(0.2).mul(x)));},
+                return format(new Decimal(1).add(new Decimal(0.2).mul(x)));
+            },
             purchaseLimit: 5,
             style: buyableStyle
         },
@@ -328,8 +336,10 @@ addLayer("s", {
     tabFormat: [
         "main-display",
         ["display-text",
-            function() { return `总计获取了 ${format(player[this.layer].pointsAcquisitionTotal)} 土` },
-            { "color": secondaryColor, "font-size": "32px", "font-family": "Comic Sans MS" }],
+            function () {
+                return `总计获取了 ${format(player[this.layer].pointsAcquisitionTotal)} 土`
+            },
+            {"color": secondaryColor, "font-size": "32px", "font-family": "Comic Sans MS"}],
         "prestige-button",
         "resource-display",
         "blank",

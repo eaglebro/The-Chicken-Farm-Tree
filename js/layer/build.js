@@ -44,11 +44,11 @@ function upGradeStyle_b() {
 addLayer('b', {
     name: "build", // This is optional, only used in a few places, If absent it just uses the layer id.
     symbol: "建筑", // This appears on the layer's node. Default is the id with the first letter capitalized
-    position: 1, // Horizontal position wit1hin a row. By default it uses the layer id and sorts in alphabetical order
+    position: 2, // Horizontal position wit1hin a row. By default it uses the layer id and sorts in alphabetical order
     startData() {
         return {
             unlocked() {
-                return milestone('c', 1)
+                return hasMilestone('c', 1)
             },
             points: new Decimal(0),
         }
@@ -121,10 +121,18 @@ addLayer('b', {
         },
 
     },
+    doReset(resettingLayer) {
+        let keep = [];
+        let keepLayer = ['s', 'c']
+        if (keepLayer.indexOf(resettingLayer) > -1) {
+            keep.push("points", "best", "total", "milestones", "upgrades");
+        }
+        if (layers[resettingLayer].row > this.row) layerDataReset("b", keep);
+    },
     upgrades: {
         11:
             {
-                title: "<h2>土培箱(还没做呢)</h2>",
+                title: "<h2>土培箱</h2>",
                 description: '解锁土培箱，以培养蚯蚓',
                 cost: new Decimal(30),
                 unlocked() {
@@ -134,30 +142,13 @@ addLayer('b', {
                 style: upGradeStyle_b
             },
         // 12: {
-        //     title: "<h2>动力压实版</h2>",
-        //     description() {return `沙子>10时，每秒自动转化${upgradeEffect('c', 12)}单位沙子至土`},
-        //     cost: new Decimal(2),
-        //     unlocked() {
-        //         return player[this.layer].unlocked
-        //     },
-        //     onPurchase: () => {
-        //     },
-        //     effect() {
-        //         return new Decimal(0.1);
-        //     },
-        //     effectDisplay() {
-        //         return this.effect()+'/s';
-        //     },
-        //     tooltip: "",
-        //     style: upGradeStyle_b
+        //     title() {
+        //         return "<h2>改进工艺</h2>";
+        //     }
         // }
     },
     milestones: {
-        // 0: {
-        //     requirementDescription: "m1: 5黏土",
-        //     effectDescription: "解锁第二行土升级",
-        //     done() { return player.c.points.gte(5) }
-        // }
+
     },
     tabFormat: [
         "main-display",

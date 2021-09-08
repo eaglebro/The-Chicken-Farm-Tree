@@ -191,6 +191,7 @@ addLayer("s", {
                         player.s.pointsAcquisitionTotal = new Decimal(1);
                     }
                     let eff = ((total).max(10).log10()).max(1);
+                    if (hasUpgrade('s', 25)) eff = ((total).max(10).pow(2).log10()).max(1);
                     if (hasUpgrade('s', 21)) eff = eff.mul(upgradeEffect('s', 21))
                     return eff;
                 },
@@ -287,6 +288,18 @@ addLayer("s", {
                 return 'x' + this.effect();
             },
             style:upGradeStyle
+        },
+        25: {
+            title() {
+                return '增强su13的效果'
+            },
+            cost() {
+                return new Decimal(19000)
+            },
+            unlocked() {
+                return hasMilestone('c', 0)
+                    && hasUpgrade('s', 15);
+            }
         }
     },
     buyables: {

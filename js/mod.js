@@ -3,7 +3,7 @@ let modInfo = {
 	id: "chickenfarmmod",
 	author: "jibro",
 	pointsName: "沙子",
-	modFiles: ['layer/achievements.js', "layer/soil.js", "layer/craft.js","layer/build.js", "layer/earthworm.js", "tree.js"],
+	modFiles: ['layer/achievements.js', "layer/soil.js", "layer/craft.js", "layer/build.js", 'layer/farming.js', "layer/earthworm.js", "tree.js"],
 	discordName: "",
 	discordLink: "",
 	initialStartPoints: new Decimal (1), // Used for hard resets and new players
@@ -17,6 +17,10 @@ let VERSION = {
 }
 
 let changelog = `<h1>Changelog:</h1><br>
+	<h2>v0.0.5</h2><br>
+		-增加节点养殖<br>
+		-实装土培箱功能<br>
+		-修复砖会变成0的bug<br>
 	<h2>v0.0.4</h2><br>
 		-增加制造里程碑m1，m2<br>
 		-增加制造升级’回扣‘<br>

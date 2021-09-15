@@ -110,7 +110,7 @@ addLayer('b', {
                 if (this.tick.lt(this.abtick())) {
                     this.tick = this.tick.add(diff);
                 } else {
-                    if (player.c.points > this.cost()) {
+                    if (player.c.points.gt(this.cost())) {
                         player.c.points = player.c.points.minus(this.cost());
                         player.b.points = player.b.points.add(1)
                     }

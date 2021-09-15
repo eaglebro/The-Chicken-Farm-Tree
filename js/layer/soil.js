@@ -118,10 +118,12 @@ addLayer("s", {
     },
     doReset(resettingLayer) {
         let keep = [];
+        let keepUpgds = hasUpgrade('s', 31)
+        if (keepUpgds) keep.push("points", "buyables", "best", "total", "milestones", "upgrades")
         let points = player.s.points
         if (layers[resettingLayer].row > this.row) {
             layerDataReset(this.layer, keep)
-            player.s.upgrades = [14]
+            if (!keepUpgds) player.s.upgrades = [14]
             if (hasUpgrade('c', 13)) player.s.points = points.mul(upgradeEffect('c', 13))
         }
     },
@@ -293,7 +295,10 @@ addLayer("s", {
         },
         25: {
             title() {
-                return '增强su13的效果'
+                return '<h2>su25</h2>'
+            },
+            description(){
+               return '增强su13的效果'
             },
             cost() {
                 return new Decimal(19000)
@@ -301,6 +306,21 @@ addLayer("s", {
             unlocked() {
                 return hasMilestone('c', 0)
                     && hasUpgrade('s', 15);
+            },
+            style: upGradeStyle
+        },
+        31: {
+            title() {
+                return '<h2>su31<h2>'
+            },
+            description() {
+                return "永久保留本节点已购买的项目";
+            },
+            cost() {
+                return new Decimal(72000)
+            },
+            unlocked() {
+                return hasUpgrade('s', 25)
             },
             style: upGradeStyle
         }

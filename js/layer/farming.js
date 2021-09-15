@@ -44,7 +44,9 @@ addLayer('f', {
     },
     update(diff) {
         if (this.isNewDay(diff) === false) return
-        updateWorm()
+        if (player.f.unlocked()) {
+            updateWorm();
+        }
     },
 
     /**
@@ -81,7 +83,7 @@ addLayer('f', {
     row: 1,
     hotkeys: [],
     layerShown() {
-        return hasMilestone('c', 1)
+        return hasUpgrade('b', 11)
     },
     doReset(resettingLayer) {
         let keep = [];
